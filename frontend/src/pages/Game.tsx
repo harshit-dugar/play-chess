@@ -17,16 +17,18 @@ export const Game = () => {
         if(!socket) return;
         socket.onmessage = (event) => {
             const message = JSON.parse(event.data);
-            const move = message.move;
+            const move = message.MOVE;
             console.log(message);
             switch(message.type){
                 case INIT_GAME:
-                    setChess(new Chess());
                     setBoard(chess.board());
                     console.log('Game initialized');
                     break;
                 case MOVE:                                
-                    chess.move(move);
+                    chess.move({
+                        from: move.from,
+                        to: move.to
+                    });
                     setBoard(chess.board());
                     console.log('Move');
                     break;
@@ -46,7 +48,7 @@ export const Game = () => {
             <div className="pt-8 max-w-screen-lg w-full">
                 <div className="grid grid-cols-6 gap-4 w-full">
                     <div className="col-span-4 w-full">
-                        <Chessboard board={board} socket={socket} />
+                        <Chessboard setBoard={setBoard} chess={chess} board={board} socket={socket} />
                     </div>
 
                     <div className="col-span-2 w-full flex justify-center">
